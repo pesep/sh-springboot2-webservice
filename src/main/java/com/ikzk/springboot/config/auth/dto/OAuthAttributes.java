@@ -26,6 +26,10 @@ public class OAuthAttributes {
 
         if("naver".equals(registrationId)) {
             return ofNaver("id", attributes);
+
+        } else if ("firebase".equals(registrationId)) {
+            return ofFirebase(userNameAttributeName, attributes);
+
         }
 
         return ofGoogle(userNameAttributeName, attributes);
@@ -50,6 +54,16 @@ public class OAuthAttributes {
                 .email((String) response.get("email"))
                 .picture((String) response.get("profileImage"))
                 .attributes(response)
+                .nameAttributeKey(userNameAttributeName)
+                .build();
+    }
+
+    private static OAuthAttributes ofFirebase(String userNameAttributeName, Map<String, Object> attributes) {
+        return OAuthAttributes.builder()
+                .name((String) attributes.get("uid"))
+                .email((String) attributes.get("email"))
+                .picture((String) attributes.get("picture"))
+                .attributes(attributes)
                 .nameAttributeKey(userNameAttributeName)
                 .build();
     }
